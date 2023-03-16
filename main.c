@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
     char fName[20];
     char lName[20];
-    char platform[30];
+    char party[20];
     int voteCount;
 } Candidate;
 
@@ -33,13 +33,12 @@ typedef struct {
 } Voter;
 
 //Functions declaration
+char *generateKeyCode();
 void addOfficer(Officer **officerList, int *officerListSize);
 void addVoter(Voter **voterList, int *voterListSize);
-char* generateKeyCode();
+void addCandidate(Candidate candidateArray[], int candidateArraySize);
 
 int main() {
-
-    printf("%s\n\n", generateKeyCode());
 
     //Only one admin for whole program
     Admin administrator;
@@ -54,7 +53,7 @@ int main() {
            "Please enter your login information\n");
 
 
-    //Admin Username input
+    //region Admin Username input
     do {
         char adminUsernameAttempt[30];
 
@@ -74,12 +73,13 @@ int main() {
         }
         //If reached, username must be valid
         adminUserValid = true;
+
+
     } while (!adminUserValid);
-    //maybe put an if() here
+    //endregion
 
+    //region Admin password input
     int badPassAttempts = 0;
-
-    //Admin password input
     do {
         char adminPasswordAttempt[30];
 
@@ -100,14 +100,16 @@ int main() {
         //if reached, password must be valid
         adminPassValid = true;
     } while (!adminPassValid);
+    //endregion
 
-
-    //masterSwitch is only ever changed at the end of the whole program
+    //Create addresses of dynamic arrays for each Person-type. Instantiation happens later.
     Officer *officerList = NULL;
     int officerListSize = 0;
 
     Voter *voterList = NULL;
     int voterListSize = 0;
+
+    Candidate candidateList[3];
 
     //region Admin Panel - Main menu and sub-menus
     printf("\n---Admin Panel---\n");
@@ -115,72 +117,29 @@ int main() {
     int mainMenuChoice;
     do {
         printf("\nMain Menu\n"
-               "1. Officers\n"
-               "2. Voters\n"
-               "3. Candidates\n"
+               "1. Add Officers\n"
+               "2. Add Voters\n"
+               "3. Add Candidates\n"
                "4. Enter Voting Mode\n"
                "0. Shutdown\n");
         scanf("%d", &mainMenuChoice);
 
-        bool subMenuSwitch = true;
         switch(mainMenuChoice) {
             case 1:
-                //Admin options related to Polling Officers
-                do {
-                    printf("\n--Admin - Polling Officer Menu--\n"
-                           "1. Add a polling officer\n"
-                           "2. Search Officer List\n"
-                           "3. Edit Officer information\n"
-                           "0. Return to Main Menu\n");
-                    int officerMenuChoice;
-                    scanf("%d", &officerMenuChoice);
-
-                    switch(officerMenuChoice) {
-                        case 1:
-                            addOfficer(&officerList, &officerListSize);
-                            break;
-                        case 2:
-                            //Call officerSearch
-                            break;
-                        case 3:
-                            //call editOfficer
-                            break;
-                        case 0:
-                            subMenuSwitch = false;
-                            break;
-                    }
-                } while(subMenuSwitch);
+                addOfficer(&officerList, &officerListSize);
                 break;
-
 
             case 2:
-                //Admin options related to voters
-                do {
-                    printf("\n--Admin - Voter Menu--\n"
-                           "1. Add a voter\n"
-                           "2. Search voter list\n"
-                           "3. Edit voter information\n"
-                           "0. Return to Main Menu\n");
-                    int voterMenuChoice;
-                    scanf("%d", &voterMenuChoice);
-
-                    switch(voterMenuChoice) {
-                        case 1:
-                            addVoter(&voterList, &voterListSize);
-                            break;
-                        case 2:
-                            //call voterSearch
-                            break;
-                        case 3:
-                            //call editVoter
-                            break;
-                        case 0:
-                            subMenuSwitch = false;
-                            break;
-                    }
-                } while(subMenuSwitch);
+                addVoter(&voterList, &voterListSize);
                 break;
 
+            case 3:
+                addCandidate(candidateList, 3);
+                break;
+
+            case 4:
+                //enter Voting Mode
+                break;
             case 0:
                 printf("Have a nice day.\n");
                 masterSwitch = false;
@@ -191,8 +150,8 @@ int main() {
         }
     } while (masterSwitch);
 
-
     free(officerList);
+    free(voterList);
     //endregion
     return 0;
 }
@@ -283,7 +242,7 @@ void addVoter(Voter **voterList, int *voterListSize) {
             printf("Last Name:");
             scanf("%s", &tempVoter.lName);
 
-            //New voter initally hasn't voted
+            //New voter initially hasn't voted
             tempVoter.hasVoted = false;
 
             //Voter Array must increase size by 1
@@ -297,4 +256,35 @@ void addVoter(Voter **voterList, int *voterListSize) {
             (*voterListSize)++;
         }
     } while (1);
+}
+
+//Function to add information to fixed-size Candidate array
+void addCandidate(Candidate candidateArray[], int candidateArraySize) {
+
+    printf("\nWelcome to the Candidate input page.");
+    printf("\n---Candidate Input---\n");
+
+    //Sub-process to exit before optional data input
+    printf("Press x to leave this page. \n"
+           "Press any other button to start entering candidate information.\n");
+    char stayGo;
+    scanf(" %c", &stayGo);
+
+    if (stayGo == 'x') {
+        return;
+    } else {
+        for (int i = 0; i < 3; i++) {
+            printf("\n---Candidate %d---", (i + 1));
+
+            printf("\nFirst name:");
+            scanf("%s", candidateArray[i].fName);
+
+            printf("Last name:");
+            scanf("%s", candidateArray[i].lName);
+
+            printf("Party:");
+            scanf("%s", candidateArray[i].party);
+            printf("\nCandidate %d has been added.\n", (i + 1));
+        }
+    }
 }
