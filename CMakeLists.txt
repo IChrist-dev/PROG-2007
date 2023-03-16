@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.24)
+project(PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian C)
+
+set(CMAKE_C_STANDARD 11)
+
+add_executable(PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian main.c)

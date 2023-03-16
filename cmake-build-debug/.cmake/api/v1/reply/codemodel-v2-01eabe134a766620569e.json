@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian-Debug-b0a147b1c0ab987eb510.json",
+					"name" : "PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG2007 - Final Project - Voter Polling Software - Ian Christian/cmake-build-debug",
+		"source" : "D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG2007 - Final Project - Voter Polling Software - Ian Christian"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
