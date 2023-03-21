@@ -23,94 +23,38 @@ typedef struct {
     char fName[20];
     char lName[20];
     char keyCode[6];
-    int hasVoted;
+    bool hasVoted;
     char candidateChoice[40];
 } Voter;
 
 //Functions declaration
-char *generateKeyCode();
-void addOfficer(Officer **officerList, int *officerListSize);
-void addVoter(Voter **voterList, int *voterListSize);
-void searchVoter(Voter **voterList, int *voterListSize);
-void addCandidate(Candidate candidateArray[], int candidateArraySize);
 
+void officerLogin(Officer officerArray[], int officersSize);
+void addOfficers(Officer *officerArray, int officersSize);
+void editOfficers(Officer *officerArray, int officersSize);
+char *generateKeyCode();
+void addVoters(Voter *voterArray, int votersSize);
+void editVoters(Voter *voterArray, int votersSize);
+void searchVoters(Voter *voterArray, int votersSize);
+void addCandidates(Candidate *candidateArray, int candidatesSize);
 int main() {
 
-    //To simulate booleans, int 0 => false, int 0 => true
+
+    Officer officerArray[3];
 
     //One officer login must exist before starting the program
-    Officer adminOfficer;
-    strcpy(adminOfficer.fName, "rootOfficer");
-    strcpy(adminOfficer.lName, "n.a.");
-    strcpy(adminOfficer.username, "root");
-    strcpy(adminOfficer.password, "123");
+    Officer adminOfficer = {"rootOfficer", "Admin","root", "123"};
+    officerArray[0] = adminOfficer;
+    int officersSize = sizeof(officerArray)/sizeof(officerArray[0]);
 
-    int adminUserValid = 0;
-    int adminPassValid = 0;
-
-    printf("Welcome to the Voter Polling Program\n"
-           "---Admin Login---\n\n"
-           "Please enter your login information\n");
+    printf("Welcome to the Voter Polling Program\n");
+    officerLogin(officerArray, officersSize);
 
 
-    //region Initial Officer Username input
-    do {
-        char adminUsernameAttempt[30];
-
-        printf("\nAdmin Officer Username:");
-        fgets(adminUsernameAttempt, sizeof(adminUsernameAttempt), stdin);
-
-        //Search for \n caused by fgets() and remove it
-        //Keeps multiword inputs from accidentally filling the buffer, spoiling the password input
-        char *p;
-        if ((p = strchr(adminUsernameAttempt, '\n')) != NULL) {
-            *p = '\0';
-        }
-
-
-        if (strcmp(adminUsernameAttempt, adminOfficer.username) != 0) {
-            printf("We're sorry. That username does not match the Administrator credentials\n");
-            continue;
-        }
-        //If reached, username must be valid
-        adminUserValid = 1;
-
-
-    } while (adminUserValid == 0);
-    //endregion
-
-    //region Initial Officer password input
-    int badPassAttempts = 0;
-    do {
-        char adminPasswordAttempt[30];
-
-        printf("\nAdmin Officer Password:");
-        scanf("%s", &adminPasswordAttempt);
-        if (strcmp(adminPasswordAttempt, adminOfficer.password) != 0) {
-            printf("We're sorry. That password does not match the Administrator credentials\n");
-            badPassAttempts++;
-
-            //Shut the program down if too many bad passwords are entered
-            if (badPassAttempts >= 3) {
-                printf("You've made too many failed attempts. The system will now shutdown.\n"
-                       "Goodbye...\n");
-                return 0;
-            }
-            continue;
-        }
-        //if reached, password must be valid
-        adminPassValid = 1;
-    } while (adminPassValid == 0);
-    //endregion
-
-    //Create addresses of dynamic arrays for each Person-type. Instantiation happens later.
-    Officer *officerList = NULL;
-    int officerListSize = 0;
-
-    Voter *voterList = NULL;
-    int voterListSize = 0;
-
-    Candidate candidateList[3];
+    Voter voterArray[5];
+    int votersSize = sizeof(voterArray)/sizeof(voterArray[0]);
+    Candidate candidateArray[3];
+    int candidatesSize = sizeof(candidateArray)/sizeof(candidateArray[0]);
 
     //region Admin Panel - Main menu and sub-menus
     printf("\n---Admin Panel---\n");
@@ -119,32 +63,34 @@ int main() {
         int mainMenuChoice;
         printf("\nMain Menu\n"
                "1. Add Officers\n"
-               "2. Add Voters\n"
-               "3. Search Voters\n"
+               "2. Edit Officers\n"
+               "3. Add Voters\n"
                "4. Edit Voters\n"
                "5. Add Candidates\n"
-               "6. Enter Voting Mode\n"
+               "6. Edit Candidates\n"
+               "7. Enter Voting Mode\n"
                "0. Shutdown\n");
         scanf("%d", &mainMenuChoice);
 
         switch(mainMenuChoice) {
             case 1:
-                addOfficer(&officerList, &officerListSize);
+                addOfficers(officerArray, officersSize);
                 break;
 
             case 2:
-                addVoter(&voterList, &voterListSize);
+                editOfficers(officerArray, officersSize);
                 break;
 
             case 3:
-                searchVoter(&voterList, &voterListSize);
+                addVoters(voterArray, votersSize);
                 break;
 
             case 4:
-                //edit voters
+                editVoters(voterArray, votersSize);
+                break;
 
             case 5:
-                addCandidate(candidateList, 3);
+                addCandidates(candidateArray, candidatesSize);
                 break;
 
             case 6:
@@ -160,19 +106,157 @@ int main() {
                 break;
         }
 
-        //test
-        for(int i=0; i<voterListSize; i++) {
-            printf("\nName: %s %s\n", voterList[i].fName, voterList[i].lName);
-            printf("Key Code: %s\n", voterList[i].keyCode);
-            printf("Voted Y/N: %d\n", voterList[i].hasVoted);
+    } while (masterSwitch == 1);
+    //endregion
+
+    return 0;
+}
+
+//Function for validating officer login
+void officerLogin(Officer officerArray[], int officersSize) {
+    //region Initial Officer Username input
+    bool adminUNameValid = false;
+    bool adminPassValid = false;
+    printf("---Admin Login---\n\n"
+           "Please enter your login information\n");
+    do {
+        char adminUsernameAttempt[30];
+
+        printf("\nRoot Officer Username:");
+        fgets(adminUsernameAttempt, sizeof(adminUsernameAttempt), stdin);
+
+        //Search for \n caused by fgets() and remove it
+        //Keeps multiword inputs from accidentally filling the buffer, spoiling the password input
+        char *p;
+        if ((p = strchr(adminUsernameAttempt, '\n')) != NULL) {
+            *p = '\0';
         }
 
-    } while (masterSwitch == 1);
+        for (int i = 0; i < officersSize; i++) {
+            if (strcmp(adminUsernameAttempt, officerArray[i].username) == 0) {
+                adminUNameValid = true;
 
-    free(officerList);
-    free(voterList);
-    //endregion
-    return 0;
+                //region Root Officer password input
+                int badPassAttempts = 0;
+                do {
+                    char adminPasswordAttempt[30];
+
+                    printf("\nRoot Officer Password:");
+                    scanf("%s", &adminPasswordAttempt);
+
+                    if (strcmp(adminPasswordAttempt, officerArray[i].password) == 0) {
+                        adminPassValid = true;
+                        return;
+                    }
+
+
+                    printf("We're sorry. That password does not match any officer credentials\n");
+                    badPassAttempts++;
+
+                    //Shut the program down if too many bad passwords are entered
+                    if (badPassAttempts >= 5) {
+                        printf("You've made too many failed attempts. The system will now shutdown.\n"
+                               "Goodbye...\n");
+                        exit(0);
+                    }
+                } while (1);
+                //endregion
+            }
+        }
+        printf("We're sorry. That username doesn't match any listed polling officer.\n");
+    } while (1);
+}
+
+//Function to add an officer to the Officer list, one at a time
+void addOfficers(Officer *officerArray, int officersSize) {
+    Officer tempOfficer;
+
+    printf("\nWelcome to the officer input page.");
+    printf("\n---Officer Input---\n");
+
+    for(int i=1; i<officersSize; i++) {
+        //Sub-process to exit before optional data input
+        printf("Press [x] to leave this page. \n"
+               "Press [y] to start entering officer information.\n");
+        char stayGo;
+        scanf(" %c", &stayGo);
+
+        if (stayGo == 'x') {
+            break;
+        } else if(stayGo == 'y'){
+
+            printf("First Name:");
+            scanf("%s", tempOfficer.fName);
+
+            printf("Last Name:");
+            scanf("%s", tempOfficer.lName);
+
+            printf("Username:");
+            scanf("%s", tempOfficer.username);
+
+            printf("Password:");
+            scanf("%s", tempOfficer.password);
+
+            officerArray[i] = tempOfficer;
+
+            printf("Officer details added.\n");
+        }
+    }
+}
+
+void editOfficers(Officer *officerArray, int officersSize) {
+    printf("\nWelcome to the officer editing page.\n");
+    printf("Enter the username of the officer you'd like to edit:");
+    char inputOfficerUName[30];
+    scanf("%s", &inputOfficerUName);
+
+    for(int i=0; i<officersSize; i++) {
+        if(strcmp(inputOfficerUName, officerArray[i].username) == 0) {
+            printf("Password:");
+            char inputOfficerPWord[30];
+            scanf("%s", &inputOfficerPWord);
+
+            if(strcmp(inputOfficerPWord, officerArray[i].password) == 0) {
+                printf("Password Correct.\n");
+
+                int editChoice;
+                do {
+                    printf("Current Officer Details:\n"
+                           "1. Name: %s %s\n"
+                           "2. Username: %s\n"
+                           "3. Password: %s\n"
+                           "0. Return to Admin Menu\n"
+                           "\nWhich would you like to edit?\n",
+                           officerArray[i].fName,
+                           officerArray[i].lName,
+                           officerArray[i].username,
+                           officerArray[i].password);
+                    scanf("%d", &editChoice);
+
+                    switch (editChoice) {
+                        case 1:
+                            printf("\nNew First Name:");
+                            scanf("%s", officerArray[i].fName);
+
+                            printf("New Last Name:");
+                            scanf("%s", officerArray[i].lName);
+                            printf("\nName edit complete.\n");
+                            break;
+                        case 2:
+                            printf("\nNew Username:");
+                            scanf("%s", officerArray[i].username);
+                            break;
+                        case 3:
+                            printf("New Password:");
+                            scanf("%s", officerArray[i].password);
+                            break;
+                        case 0:
+                            break;
+                    }
+                } while(editChoice != 0);
+            }
+        }
+    }
 }
 
 //Method to create a unique key code for a voter
@@ -196,56 +280,13 @@ char* generateKeyCode() {
 }
 
 //Function to add an officer to the Officer list, one at a time
-void addOfficer(Officer **officerList, int *officerListSize) {
-    Officer tempOfficer;
-
-    printf("\nWelcome to the officer input page.");
-    do {
-        printf("\n---Officer Input---\n");
-
-        //Sub-process to exit before optional data input
-        printf("Press [x] to leave this page. \n"
-               "Press [y] to start entering officer information.\n");
-        char stayGo;
-        scanf(" %c", &stayGo);
-
-        if (stayGo == 'x') {
-            break;
-        } else if(stayGo == 'y'){
-            printf("First Name:");
-            scanf("%s", &tempOfficer.fName);
-
-            printf("Last Name:");
-            scanf("%s", &tempOfficer.lName);
-
-            printf("Username:");
-            scanf("%s", &tempOfficer.username);
-
-            printf("Password:");
-            scanf("%s", &tempOfficer.password);
-
-            //Officer Array must increase size by 1
-            *officerList = realloc(*officerList, (*officerListSize + 1) * sizeof(Officer));
-
-            //Add the tempOfficer to the Officer Array
-            strcpy((*officerList)[*officerListSize].fName, tempOfficer.fName);
-            strcpy((*officerList)[*officerListSize].lName, tempOfficer.lName);
-            strcpy((*officerList)[*officerListSize].username, tempOfficer.username);
-            strcpy((*officerList)[*officerListSize].password, tempOfficer.password);
-
-            (*officerListSize)++;
-        }
-    } while (1);
-}
-
-//Function to add an officer to the Officer list, one at a time
-void addVoter(Voter **voterList, int *voterListSize) {
+void addVoters(Voter *voterArray, int votersSize) {
     Voter tempVoter;
 
-    printf("\nWelcome to the voter input page.");
-    do {
-        printf("\n---Voter Input---\n");
+    printf("\nWelcome to the Voter input page.");
+    printf("\n---Voter Input---\n");
 
+    for(int i=0; i<votersSize; i++) {
         //Sub-process to exit before optional data input
         printf("Press [x] to leave this page. \n"
                "Press [y] to start entering officer information.\n");
@@ -255,86 +296,94 @@ void addVoter(Voter **voterList, int *voterListSize) {
         if (stayGo == 'x') {
             break;
         } else if(stayGo == 'y'){
+
             printf("First Name:");
-            scanf("%s", &tempVoter.fName);
+            scanf("%s", tempVoter.fName);
 
             printf("Last Name:");
-            scanf("%s", &tempVoter.lName);
+            scanf("%s", tempVoter.lName);
 
-            //Make a random key
+            //generate a random keycode for the new voter
             strcpy(tempVoter.keyCode, generateKeyCode());
 
-            //Display newly added voter info
-            printf("---Voter To Add---\n"
+            //Initial voting status of a new voter can only be false
+            tempVoter.hasVoted = false;
+
+            voterArray[i] = tempVoter;
+
+            //Display new voter output
+            printf("New Voter Added with these credentials:\n"
                    "Name: %s %s\n"
-                   "Key Code: %s\n",
-                   tempVoter.fName,
-                   tempVoter.lName,
-                   tempVoter.keyCode);
-
-            //Voter Array must increase size by 1
-            *voterList = realloc(*voterList, (*voterListSize + 1) * sizeof(Voter));
-
-            //Add the tempOfficer to the Officer Array
-            strcpy((*voterList)[*voterListSize].fName, tempVoter.fName);
-            strcpy((*voterList)[*voterListSize].lName, tempVoter.lName);
-            strcpy((*voterList)[*voterListSize].keyCode, generateKeyCode());
-            //New voter initially hasn't cast their vote
-            (*voterList)[*voterListSize].hasVoted = 0;
-
-
-            (*voterListSize)++;
+                   "Confidential Key Code: %s\n"
+                   "\nNext Voter\n",
+                   voterArray[i].fName,
+                   voterArray[i].lName,
+                   voterArray[i].keyCode);
         }
-    } while (1);
+    }
 }
 
-//Function to search through the voter list for a specific voter
-void searchVoter(Voter **voterList, int *voterListSize) {
+void editVoters(Voter *voterArray, int votersSize) {
+    printf("\nWelcome to the voter editing page.\n");
+    printf("Enter the key code of the voter you'd like to edit:");
+    char inputKeyCode[30];
+    scanf("%s", &inputKeyCode);
 
-    printf("Welcome to the voter search page.\n");
+    for (int i = 0; i < votersSize; i++) {
+        if (strcmp(inputKeyCode, voterArray[i].keyCode) == 0) {
 
-    printf("Please provide a voter keycode:");
-    char searchKeyCode[6];
-    scanf("%s", &searchKeyCode);
+            int editChoice;
+            do {
+                //Using bool to print the voted/not voted state of the person
+                char tempVoteState;
+                if (voterArray[i].hasVoted == true) {
+                    tempVoteState = 'Y';
+                } else tempVoteState = 'N';
 
-    //Replace the \n caused by pressing the Enter key
-    char *p;
-    if ((p = strchr(searchKeyCode, '\n')) != NULL) {
-        *p = '\0';
-    }
+                printf("Current Voter Details:\n"
+                       "1. Name: %s %s\n"
+                       "2. Key Code: %s\n"
+                       "3. Has Voted: %c\n"
+                       "0. Return to Admin Menu\n"
+                       "\nWhich would you like to edit?\n",
+                       voterArray[i].fName,
+                       voterArray[i].lName,
+                       voterArray[i].keyCode,
+                       tempVoteState);
+                scanf("%d", &editChoice);
 
-    //treating as boolean
-    int matchFound = 0;
+                switch (editChoice) {
+                    case 1:
+                        printf("\nNew First Name:");
+                        scanf("%s", voterArray[i].fName);
 
-    printf("%d", *voterListSize);
-    for (int i = 0; i <= *voterListSize; i++) {
-        if (strcmp(voterList[i]->keyCode, searchKeyCode) == 0) {
-            printf("\n***Match found***\n");
-            matchFound = 1;
-            printf("\nName: %s %s\n", voterList[i]->fName, voterList[i]->lName);
-            printf("Key Code: %s\n", voterList[i]->keyCode);
-            if (voterList[i]->hasVoted == 1) {
-                printf("Has Voted: Yes\n");
-            } else {
-                printf("Has Voted: No\n");
-            }
+                        printf("New Last Name:");
+                        scanf("%s", voterArray[i].lName);
+                        printf("\nName edit complete.\n");
+                        break;
+                    case 2:
+                        //Assign a new random key code
+                        strcpy(voterArray[i].keyCode, generateKeyCode());
+                        break;
+                    case 3:
+                        //toggle whether the voter has cast a ballot
+                        printf("New Vote status:");
+                        voterArray[i].hasVoted = !voterArray[i].hasVoted;
+                        break;
+                    case 0:
+                        break;
+                }
+            } while (editChoice != 0);
         }
     }
-    if (matchFound == 0) {
-        printf("No voter was found using %s", searchKeyCode);
-    }
-
-
 }
 
 //Function to add information to fixed-size Candidate array
-void addCandidate(Candidate candidateArray[], int candidateArraySize) {
-
+void addCandidates(Candidate *candidateArray, int candidatesSize) {
     printf("\nWelcome to the Candidate input page.");
-    printf("\n---Candidate Input---\n");
 
     //Sub-process to exit before optional data input
-    printf("Press [x] to leave this page. \n"
+    printf("\nPress [x] to leave this page.\n"
            "Press [y] to start entering candidate information.\n");
     char stayGo;
     scanf(" %c", &stayGo);
