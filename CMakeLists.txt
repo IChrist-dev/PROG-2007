@@ -3,4 +3,4 @@ project(PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian main.c)
+add_executable(PROG2007___Final_Project___Voter_Polling_Software___Ian_Christian main.c OfficerFunctions.c OfficerFunctions.h StructuresDef.h VoterFunctions.c VoterFunctions.h)
