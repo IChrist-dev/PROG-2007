@@ -20,5 +20,5 @@ typedef struct {
     char lName[20];
     char keyCode[6];
     bool hasVoted;
-    char candidateChoice[40];
+    char candidateChoice[20];
 } Voter;

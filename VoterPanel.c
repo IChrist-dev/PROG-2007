@@ -57,6 +57,9 @@ enterVoterPanel(Officer *officerArray, int officerSize, Voter *voterArray, int v
 
 //Function to validate voters and allow them to cast votes
 void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int candidatesSize) {
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+
     printf("\nPlease enter your unique key code:");
     char keyCodeAttempt[6];
     scanf("%s", &keyCodeAttempt);
@@ -73,14 +76,72 @@ void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int 
             char fNameAttempt[20];
             scanf("%s", &fNameAttempt);
 
-            printf("\nLast Name:");
+            printf("Last Name:");
             char lNameAttempt[20];
             scanf("%s", &lNameAttempt);
 
+
             if(strcmp(fNameAttempt, voterArray[i].fName) == 0
             && strcmp(lNameAttempt, voterArray[i].lName) == 0) {
+
+                //Check if person has voted. Reject them if true
+                if(voterArray[i].hasVoted) {
+                    printf("\nYou are recorded as having already voted.\n"
+                           "You may not vote multiple times.\n"
+                           "\nNow returning to the Voting menu...");
+                    break;
+                }
                 printf("\nCredentials Accepted\n"
                        "You may now cast your vote\n");
+
+                bool finalVote = false;
+
+                do {
+                    //Present all the candidates to the voter
+                    printf("Candidate options\n"
+                           "Option #\tName\t\t\tParty\n");
+                    for(int j=0; j<candidatesSize; j++) {
+                        printf("%d.\t\t%s %s\t\t%s\n",
+                               j+1,
+                               candidateArray[j].fName,
+                               candidateArray[j].lName,
+                               candidateArray[j].party);
+                    }
+                    printf("\nSelected Option #:");
+                    int selectedOption;
+                    scanf("%d", &selectedOption);
+
+                    //Ensure no lingering inputs are in the buffer
+                    fflush(stdin);
+
+                    //Confirm selection
+                    printf("You have chosen to vote for %s %s of the %s party.\n"
+                           "Are you certain? Y/N\n",
+                           candidateArray[i].fName,
+                           candidateArray[i].lName,
+                           candidateArray[i].party);
+                    char confirmVote;
+                    scanf("%c", &confirmVote);
+
+                    if(confirmVote == 'Y' || confirmVote == 'y') {
+                        //Voter has decided on their choice
+                        finalVote = true;
+
+                        //Correct option # to align with array index
+                        selectedOption--;
+
+                        //Add vote to appropriate candidate's count
+                        candidateArray[selectedOption].voteCount++;
+                        //Save voter's chosen party as a variable in their structure
+                        strcpy(voterArray[i].candidateChoice, candidateArray[i].party);
+                        //Mark the voter as having voted, so they cannot cast multiple votes
+                        voterArray[i].hasVoted = true;
+
+                        printf("\nYour vote has been recorded\nThank you\n");
+                    } else {
+                        printf("\nThis selection will be erased. You may see the options again.\n");
+                    }
+                } while(!finalVote);
 
 
             } else {
@@ -93,4 +154,7 @@ void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int 
     if(!keyCodeFound) {
         printf("\n That key code could not be found. Please try again or request assistance from a Voting Officer.");
     }
+
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
 }
