@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 //Person-type structure definitions
 typedef struct {
     char fName[20];

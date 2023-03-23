@@ -6,7 +6,7 @@
 #include "OfficerFunctions.h"
 
 //Function for validating officer login
-void officerLogin(Officer officerArray[], int officersSize) {
+int officerLogin(Officer *officerArray, int officersSize) {
     //region Initial Officer Username input
     bool adminUNameValid = false;
     bool adminPassValid = false;
@@ -38,19 +38,23 @@ void officerLogin(Officer officerArray[], int officersSize) {
                     scanf("%s", &adminPasswordAttempt);
 
                     if (strcmp(adminPasswordAttempt, officerArray[i].password) == 0) {
+                        //Ensure no lingering inputs are in the buffer
+                        fflush(stdin);
+
                         adminPassValid = true;
-                        return;
+                        //returns 0 if login is successful
+                        return 0;
                     }
 
 
                     printf("We're sorry. That password does not match any officer credentials\n");
                     badPassAttempts++;
 
-                    //Shut the program down if too many bad passwords are entered
-                    if (badPassAttempts >= 5) {
-                        printf("You've made too many failed attempts. The system will now shutdown.\n"
-                               "Goodbye...\n");
-                        exit(0);
+                    //Return 1 means too many unsuccessful logins
+                    if (badPassAttempts >= 3) {
+                        //Ensure no lingering inputs are in the buffer
+                        fflush(stdin);
+                        return 1;
                     }
                 } while (1);
                 //endregion
@@ -62,45 +66,53 @@ void officerLogin(Officer officerArray[], int officersSize) {
 
 //Function to add an officer to the Officer list, one at a time
 void addOfficers(Officer *officerArray, int officersSize) {
-    Officer tempOfficer;
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
 
     printf("\nWelcome to the officer input page.");
-    printf("\n---Officer Input---\n");
+    printf("\n---Officer Input Should Only Be Performed Once---\n");
 
     for(int i=1; i<officersSize; i++) {
         //Sub-process to exit before optional data input
-        printf("Press [x] to leave this page. \n"
+        printf("\nPress [x] to leave this page. \n"
                "Press [y] to start entering officer information.\n");
         char stayGo;
         scanf(" %c", &stayGo);
 
         if (stayGo == 'x') {
+            //Ensure no lingering inputs are in the buffer
+            fflush(stdin);
             break;
         } else if(stayGo == 'y'){
 
             printf("First Name:");
-            scanf("%s", tempOfficer.fName);
+            scanf("%s", officerArray[i].fName);
 
             printf("Last Name:");
-            scanf("%s", tempOfficer.lName);
+            scanf("%s", officerArray[i].lName);
 
             printf("Username:");
-            scanf("%s", tempOfficer.username);
+            scanf("%s", officerArray[i].username);
 
             printf("Password:");
-            scanf("%s", tempOfficer.password);
-
-            officerArray[i] = tempOfficer;
+            scanf("%s", officerArray[i].password);
 
             printf("Officer details added.\n");
         }
     }
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+    printf("\nReturning to Admin Panel...\n");
 }
 
 void editOfficers(Officer *officerArray, int officersSize) {
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+
     printf("\nWelcome to the officer editing page.\n");
     printf("Enter the username of the officer you'd like to edit:");
     char inputOfficerUName[30];
+
     scanf("%s", &inputOfficerUName);
 
     for(int i=0; i<officersSize; i++) {
@@ -144,10 +156,20 @@ void editOfficers(Officer *officerArray, int officersSize) {
                             scanf("%s", officerArray[i].password);
                             break;
                         case 0:
+                            //Ensure no lingering inputs are in the buffer
+                            fflush(stdin);
+                            //Returns to Admin menu
+                            break;
+                        default:
+                            //Input validation
+                            printf("\nThat choice was not listed. Please try again.\n");
                             break;
                     }
                 } while(editChoice != 0);
             }
         }
     }
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+    printf("\nReturning to Admin Panel...\n");
 }

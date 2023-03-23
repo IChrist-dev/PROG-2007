@@ -28,54 +28,61 @@ char* generateKeyCode() {
 
 //Function to add an officer to the Officer list, one at a time
 void addVoters(Voter *voterArray, int votersSize) {
-    Voter tempVoter;
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
 
     printf("\nWelcome to the Voter input page.");
-    printf("\n---Voter Input---\n");
+    printf("\n---Voter Input Should Only Be Performed Once---\n");
 
     for(int i=0; i<votersSize; i++) {
         //Sub-process to exit before optional data input
-        printf("Press [x] to leave this page. \n"
+        printf("\nPress [x] to leave this page. \n"
                "Press [y] to start entering officer information.\n");
         char stayGo;
         scanf(" %c", &stayGo);
 
         if (stayGo == 'x') {
+            //Ensure no lingering inputs are in the buffer
+            fflush(stdin);
             break;
         } else if(stayGo == 'y'){
 
             printf("First Name:");
-            scanf("%s", tempVoter.fName);
+            scanf("%s", voterArray[i].fName);
 
             printf("Last Name:");
-            scanf("%s", tempVoter.lName);
+            scanf("%s", voterArray[i].lName);
 
             //generate a random keycode for the new voter
-            strcpy(tempVoter.keyCode, generateKeyCode());
+            strcpy(voterArray[i].keyCode, generateKeyCode());
 
             //Initial voting status of a new voter can only be false
-            tempVoter.hasVoted = false;
-
-            voterArray[i] = tempVoter;
+            voterArray[i].hasVoted = false;
 
             //Display new voter output
             printf("New Voter Added with these credentials:\n"
                    "Name: %s %s\n"
                    "Confidential Key Code: %s\n"
-                   "\nNext Voter\n",
+                   "\n---Next Voter---\n",
                    voterArray[i].fName,
                    voterArray[i].lName,
                    voterArray[i].keyCode);
         }
     }
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
 }
 
 void editVoters(Voter *voterArray, int votersSize) {
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+
     printf("\nWelcome to the voter editing page.\n");
     printf("Enter the key code of the voter you'd like to edit:");
     char inputKeyCode[30];
     scanf("%s", &inputKeyCode);
 
+    //Search through Voter array for a key code match
     for (int i = 0; i < votersSize; i++) {
         if (strcmp(inputKeyCode, voterArray[i].keyCode) == 0) {
 
@@ -87,6 +94,7 @@ void editVoters(Voter *voterArray, int votersSize) {
                     tempVoteState = 'Y';
                 } else tempVoteState = 'N';
 
+                //Display voter info prior to making changes
                 printf("Current Voter Details:\n"
                        "1. Name: %s %s\n"
                        "2. Key Code: %s\n"
@@ -118,9 +126,19 @@ void editVoters(Voter *voterArray, int votersSize) {
                         voterArray[i].hasVoted = !voterArray[i].hasVoted;
                         break;
                     case 0:
+                        //Ensure no lingering inputs are in the buffer
+                        fflush(stdin);
+                        //Returns to Admin menu
+                        break;
+                    default:
+                        //Input validation
+                        printf("\nThat choice was not listed. Please try again.\n");
                         break;
                 }
-            } while (editChoice != 0);
+            } while(editChoice != 0);
         }
     }
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+    printf("\nReturning to Admin Panel...\n");
 }
