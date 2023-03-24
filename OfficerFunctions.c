@@ -8,14 +8,12 @@
 //Function for validating officer login
 int officerLogin(Officer *officerArray, int officersSize) {
     //region Initial Officer Username input
-    bool adminUNameValid = false;
-    bool adminPassValid = false;
     printf("---Admin Login---\n\n"
            "Please enter your login information\n");
     do {
         char adminUsernameAttempt[30];
 
-        printf("\nRoot Officer Username:");
+        printf("\nOfficer Username:");
         fgets(adminUsernameAttempt, sizeof(adminUsernameAttempt), stdin);
 
         //Search for \n caused by fgets() and remove it
@@ -27,21 +25,19 @@ int officerLogin(Officer *officerArray, int officersSize) {
 
         for (int i = 0; i < officersSize; i++) {
             if (strcmp(adminUsernameAttempt, officerArray[i].username) == 0) {
-                adminUNameValid = true;
 
                 //region Root Officer password input
                 int badPassAttempts = 0;
                 do {
                     char adminPasswordAttempt[30];
 
-                    printf("\nRoot Officer Password:");
+                    printf("\nOfficer Password:");
                     scanf("%s", &adminPasswordAttempt);
 
                     if (strcmp(adminPasswordAttempt, officerArray[i].password) == 0) {
                         //Ensure no lingering inputs are in the buffer
                         fflush(stdin);
 
-                        adminPassValid = true;
                         //returns 0 if login is successful
                         return 0;
                     }
@@ -167,6 +163,73 @@ void editOfficers(Officer *officerArray, int officersSize) {
                     }
                 } while(editChoice != 0);
             }
+        }
+    }
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+    printf("\nReturning to Admin Panel...\n");
+}
+
+//Function for officers to view the voting statistics for all candidates
+void reviewStats(Candidate *candidateArray, int candidatesSize) {
+    //Ensure no lingering inputs are in the buffer
+    fflush(stdin);
+
+    printf("\nWelcome to the Statistics Review Page\n"
+           "#\tName\t\tParty\t\tVote Count");
+    for(int i=0; i<candidatesSize; i++) {
+        printf("\n%d.\t%s %s\t%s\t\t%d\n",
+               i+1,
+               candidateArray[i].fName,
+               candidateArray[i].lName,
+               candidateArray[i].party,
+               candidateArray[i].voteCount);
+    }
+
+    printf("\nWould you like to declare the winner? Y/N\n");
+    char declareWin;
+    scanf("%c", &declareWin);
+
+    if(declareWin == 'Y' || declareWin == 'y') {
+        int indexOfWinner;
+        int highestVoteCount;
+
+        //Compare all the voteCounts to find the highest one and save that candidate's array index
+        for(int i=0; i<candidatesSize; i++) {
+            if(candidateArray[i].voteCount > highestVoteCount) {
+                highestVoteCount = candidateArray[i].voteCount;
+                indexOfWinner = i;
+            }
+        }
+
+        //Clause to avoid a false win where no votes were cast
+        if(highestVoteCount != 0) {
+            printf("\nElection Winner: %s %s\n"
+                   "Party: %s\n"
+                   "Vote Count: %d\n"
+                   "\nDo you wish to close the program now? Y/N\n",
+                   candidateArray[indexOfWinner].fName,
+                   candidateArray[indexOfWinner].lName,
+                   candidateArray[indexOfWinner].party,
+                   candidateArray[indexOfWinner].voteCount);
+        } else {
+            printf("\nNo winner can be declared\n"
+                   "All vote counts are zero.\n");
+
+            //Ensure no lingering inputs are in the buffer
+            fflush(stdin);
+            //Display the winner
+        }
+
+        //Ensure no lingering inputs are in the buffer
+        fflush(stdin);
+
+        char shutdownYN;
+        scanf("%c", &shutdownYN);
+
+        if(shutdownYN == 'Y' || shutdownYN == 'y') {
+            printf("\nProgram now closing. Bye\n");
+            exit(0);
         }
     }
     //Ensure no lingering inputs are in the buffer

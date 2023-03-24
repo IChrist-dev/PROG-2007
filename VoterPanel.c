@@ -8,8 +8,7 @@
 #include "CandidateFunctions.h"
 #include "VoterPanel.h"
 
-void
-enterVoterPanel(Officer *officerArray, int officerSize, Voter *voterArray, int votersSize, Candidate *candidateArray,
+void enterVoterPanel(Officer *officerArray, int officerSize, Voter *voterArray, int votersSize, Candidate *candidateArray,
                 int candidatesSize) {
     //Ensure no lingering inputs are in the buffer
     fflush(stdin);
@@ -96,17 +95,23 @@ void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int 
 
                 bool finalVote = false;
 
+                //index for candidateArray
+                int j;
+
                 do {
                     //Present all the candidates to the voter
                     printf("Candidate options\n"
                            "Option #\tName\t\t\tParty\n");
-                    for(int j=0; j<candidatesSize; j++) {
+                    for(j = 0; j<candidatesSize; j++) {
                         printf("%d.\t\t%s %s\t\t%s\n",
                                j+1,
                                candidateArray[j].fName,
                                candidateArray[j].lName,
                                candidateArray[j].party);
                     }
+                    //Option to exit the voting process early
+                    printf("0. Return to Voting Panel");
+
                     printf("\nSelected Option #:");
                     int selectedOption;
                     scanf("%d", &selectedOption);
@@ -114,12 +119,18 @@ void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int 
                     //Ensure no lingering inputs are in the buffer
                     fflush(stdin);
 
+                    if(selectedOption == '0') {
+                        //Returns to the voting panel
+                        break;
+                    }
+
+
                     //Confirm selection
                     printf("You have chosen to vote for %s %s of the %s party.\n"
                            "Are you certain? Y/N\n",
-                           candidateArray[i].fName,
-                           candidateArray[i].lName,
-                           candidateArray[i].party);
+                           candidateArray[selectedOption].fName,
+                           candidateArray[selectedOption].lName,
+                           candidateArray[selectedOption].party);
                     char confirmVote;
                     scanf("%c", &confirmVote);
 

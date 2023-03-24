@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "StructuresDef.h"
@@ -86,6 +85,10 @@ int main() {
                 enterVoterPanel(officerArray, officersSize, voterArray, votersSize, candidateArray, candidatesSize);
                 break;
 
+            case 8:
+                reviewStats(candidateArray, candidatesSize);
+                break;
+
             case 9:
                 printf("Have a nice day.\n");
                 return 0;
@@ -97,6 +100,4 @@ int main() {
         }
     } while (mainMenuChoice != 9);
     //endregion
-
-    return 0;
 }
