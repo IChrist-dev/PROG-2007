@@ -192,7 +192,8 @@ void reviewStats(Candidate *candidateArray, int candidatesSize) {
 
     if(declareWin == 'Y' || declareWin == 'y') {
         int indexOfWinner;
-        int highestVoteCount;
+        int highestVoteCount = 0;
+        bool tiedElection = false;
 
         //Compare all the voteCounts to find the highest one and save that candidate's array index
         for(int i=0; i<candidatesSize; i++) {
@@ -202,8 +203,8 @@ void reviewStats(Candidate *candidateArray, int candidatesSize) {
             }
         }
 
-        //Clause to avoid a false win where no votes were cast
         if(highestVoteCount != 0) {
+            //Display the winner
             printf("\nElection Winner: %s %s\n"
                    "Party: %s\n"
                    "Vote Count: %d\n"
@@ -218,7 +219,6 @@ void reviewStats(Candidate *candidateArray, int candidatesSize) {
 
             //Ensure no lingering inputs are in the buffer
             fflush(stdin);
-            //Display the winner
         }
 
         //Ensure no lingering inputs are in the buffer

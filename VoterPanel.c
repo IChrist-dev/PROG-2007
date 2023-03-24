@@ -128,9 +128,9 @@ void castVote(Voter *voterArray, int votersSize, Candidate *candidateArray, int 
                     //Confirm selection
                     printf("You have chosen to vote for %s %s of the %s party.\n"
                            "Are you certain? Y/N\n",
-                           candidateArray[selectedOption].fName,
-                           candidateArray[selectedOption].lName,
-                           candidateArray[selectedOption].party);
+                           candidateArray[selectedOption-1].fName,
+                           candidateArray[selectedOption-1].lName,
+                           candidateArray[selectedOption-1].party);
                     char confirmVote;
                     scanf("%c", &confirmVote);
 
