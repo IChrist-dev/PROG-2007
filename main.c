@@ -27,7 +27,7 @@ int main() {
 
 
     //Create the voter and candidate arrays for later usage
-    Voter voterArray[5];
+    Voter voterArray[10];
     int votersSize = sizeof(voterArray)/sizeof(voterArray[0]);
 
     Candidate candidateArray[3];
@@ -44,10 +44,10 @@ int main() {
         printf("\nMenu\n"
                "1. Add Officers\n"
                "2. Edit Officers\n"
-               "3. Add Voters\n"
-               "4. Edit Voters\n"
-               "5. Add Candidates\n"
-               "6. Edit Candidates\n"
+               "3. Add Candidates\n"
+               "4. Edit Candidates\n"
+               "5. Add Voters\n"
+               "6. Edit Voters\n"
                "7. Enter Voting Mode\n"
                "8. Review Statistics\n"
                "9. Shutdown\n");
@@ -66,19 +66,19 @@ int main() {
                 break;
 
             case 3:
-                addVoters(voterArray, votersSize);
-                break;
-
-            case 4:
-                editVoters(voterArray, votersSize);
-                break;
-
-            case 5:
                 addCandidates(candidateArray, candidatesSize);
                 break;
 
-            case 6:
+            case 4:
                 editCandidates(candidateArray, candidatesSize);
+                break;
+
+            case 5:
+                addVoters(voterArray, votersSize);
+                break;
+
+            case 6:
+                editVoters(voterArray, votersSize);
                 break;
 
             case 7:

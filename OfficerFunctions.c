@@ -193,7 +193,6 @@ void reviewStats(Candidate *candidateArray, int candidatesSize) {
     if(declareWin == 'Y' || declareWin == 'y') {
         int indexOfWinner;
         int highestVoteCount = 0;
-        bool tiedElection = false;
 
         //Compare all the voteCounts to find the highest one and save that candidate's array index
         for(int i=0; i<candidatesSize; i++) {

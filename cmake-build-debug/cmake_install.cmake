@@ -1,4 +1,4 @@
-# Install script for directory: D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG2007-Final Project-VoterPollingSoftware-IanChristian
+# Install script for directory: D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG 2007 - Final Project - Ian Christian/Voter Polling Program
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG2007-Final Project-VoterPollingSoftware-IanChristian/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/NSCC Programming Classes/PROG 2007 - Programming II/Final Project/PROG 2007 - Final Project - Ian Christian/Voter Polling Program/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
