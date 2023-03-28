@@ -9,6 +9,19 @@
 
 int main() {
 
+    //Erase any text files create during a previous run of the program
+    FILE *fOfficerPtr;
+    fOfficerPtr = fopen("../Output-Text-Files/AddedOfficers.txt", "w");
+    fclose(fOfficerPtr);
+
+    FILE *fCandidatePtr;
+    fCandidatePtr = fopen("../Output-Text-Files/AddedCandidates.txt", "w");
+    fclose(fCandidatePtr);
+
+    FILE *fVoterPtr;
+    fVoterPtr = fopen("../Output-Text-Files/AddedVoters.txt", "w");
+    fclose(fVoterPtr);
+
     //One officer login must exist before starting the program
     Officer adminOfficer = {"rootOfficer", "Admin","root", "123"};
 
@@ -24,7 +37,6 @@ int main() {
                "Goodbye...\n");
         return 0;
     }
-
 
     //Create the voter and candidate arrays for later usage
     Voter voterArray[10];
@@ -101,3 +113,4 @@ int main() {
     } while (mainMenuChoice != 9);
     //endregion
 }
+

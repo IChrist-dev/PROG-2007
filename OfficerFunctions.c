@@ -94,6 +94,20 @@ void addOfficers(Officer *officerArray, int officersSize) {
             scanf("%s", officerArray[i].password);
 
             printf("Officer details added.\n");
+
+            //Add details to a text file for convenience
+            FILE *append;
+
+            append = fopen("../Output-Text-Files/AddedOfficers.txt", "a");
+            fprintf(append, "Name: ");
+            fprintf(append, "%s ", officerArray[i].fName);
+            fprintf(append, "%s\n", officerArray[i].lName);
+            fprintf(append, "Username: ");
+            fprintf(append, "%s\n", officerArray[i].username);
+            fprintf(append, "Password: ");
+            fprintf(append, "%s\n\n", officerArray[i].password);
+
+            fclose(append);
         }
     }
     //Ensure no lingering inputs are in the buffer

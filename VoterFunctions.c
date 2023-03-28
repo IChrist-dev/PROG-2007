@@ -67,6 +67,18 @@ void addVoters(Voter *voterArray, int votersSize) {
                    voterArray[i].fName,
                    voterArray[i].lName,
                    voterArray[i].keyCode);
+
+            //Add details to a text file for convenience
+            FILE *append;
+
+            append = fopen("../Output-Text-Files/AddedVoters.txt", "a");
+            fprintf(append, "Name: ");
+            fprintf(append, "%s ", voterArray[i].fName);
+            fprintf(append, "%s\n", voterArray[i].lName);
+            fprintf(append, "Keycode: ");
+            fprintf(append, "%s\n\n", voterArray[i].keyCode);
+
+            fclose(append);
         }
     }
     //Ensure no lingering inputs are in the buffer

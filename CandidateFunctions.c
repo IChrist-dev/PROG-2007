@@ -38,6 +38,18 @@ void addCandidates(Candidate *candidateArray, int candidatesSize) {
 
             //Newly added candidate vote count starts at 0
             candidateArray[i].voteCount = 0;
+
+            //Add details to a text file for convenience
+            FILE *append;
+
+            append = fopen("../Output-Text-Files/AddedCandidates.txt", "a");
+            fprintf(append, "Name: ");
+            fprintf(append, "%s ", candidateArray[i].fName);
+            fprintf(append, "%s\n", candidateArray[i].lName);
+            fprintf(append, "Party: ");
+            fprintf(append, "%s\n\n", candidateArray[i].party);
+
+            fclose(append);
         }
     }
     //Ensure no lingering inputs are in the buffer
