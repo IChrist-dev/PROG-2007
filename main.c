@@ -10,15 +10,13 @@
 int main() {
 
     //Erase any text files create during a previous run of the program
-    FILE *fOfficerPtr;
+    FILE *fOfficerPtr, *fCandidatePtr, *fVoterPtr;
     fOfficerPtr = fopen("../Output-Text-Files/AddedOfficers.txt", "w");
     fclose(fOfficerPtr);
 
-    FILE *fCandidatePtr;
     fCandidatePtr = fopen("../Output-Text-Files/AddedCandidates.txt", "w");
     fclose(fCandidatePtr);
 
-    FILE *fVoterPtr;
     fVoterPtr = fopen("../Output-Text-Files/AddedVoters.txt", "w");
     fclose(fVoterPtr);
 
